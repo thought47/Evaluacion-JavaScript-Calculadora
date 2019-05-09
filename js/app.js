@@ -81,7 +81,6 @@ var calculadora = {
 		this.resultado = 0;
 		this.Operación = "";
 		this.auxTeclaIgual = false;
-		auxTeclaOperador: false
 		this.ultimoValor = 0;
 		this.updatepantalla();
 	},
@@ -105,8 +104,7 @@ var calculadora = {
 	},
 
 
-//la funcion ingresodecimal tambien es de tipo condicional if else. Esta funcion define la siguiente condicion: si el valor de pantalla es igual a 0 considerando el metodo indexOF, el cual  busca en la cadena la presencia de un punto y devuelve el índice dentro del objeto a la primera ocurrencia del valor en pantalla, y si el valor de pantalla es vacio, entonces el valor de pantalla es igual al mismo valor de pantalla + el punto.
-
+//la funcion ingresodecimal tambien es de tipo condicional if else. Esta funcion define la siguiente condicion: si el valor de pantalla buscando el punto en la cadena con el metodo indeof (".") es igual a vacio, entonces el valor de pantalla es igual al valor de pantalla + "0.""  entonces el valor de pantalla tomaria el valor del valor de pantalla + .
 
 	ingresoDecimal: function(){
 		if (this.valorpantalla.indexOf(".")== -1) {
@@ -119,11 +117,16 @@ var calculadora = {
 		}
 	},
 
+	//la funcion numero se le conoce como una estructura con cuerpo debido a que tiene un parametro valor, las condiciones son el valor de pantalla definido por el valor 0
+
 	Numero: function(valor){
 		if (this.auxTeclaOperador){
 			this.valorpantalla = "0";
-			this.auxTeclaOperador = true;
 		}
+
+		// si en la pantalla hay menos de 8 caracteres se va a imprimir el número presionado, teniendo en cuenta que si en la pantalla solo hay un 0 y lo quitamos para colocar nuestro número, si no, solo colocamos el número sin borrar lo demás.
+
+
 		if (this.valorpantalla.length < 8) {
 			if (this.valorpantalla=="0"){
 				this.valorpantalla = "";
@@ -136,19 +139,23 @@ var calculadora = {
 	},
 
 
+// si el parametro operacion esta vacio se realiza la siguiente condicion: la variable valor pantalla es igual a 0 y el primer valor es igual al valor pantalla pero tranforma el argumento a numeroflotante mediante parseFloat.  Entonces si no se cumple esa condicion, segundo valor es igual al valor de pantalla y se ejecuta el evento de la funcion resultado.
+
+
+
 	Operacion: function(oper){
 		if(this.operacion == ""){
 			this.primerValor = parseFloat(this.valorpantalla);
 			this.valorpantalla = "0";
 		} else {
 			this.segundoValor = parseFloat(this.valorpantalla);
-			this.auxTeclaOperador = true;
 			this.Resultado();
 		}
 		this.operacion = oper;
-		this.auxTeclaIgual = false;
 		this.updatepantalla();
 	},
+
+//La funcion operacion es de tipo if else, si el parametro auxTeclaIgual es falsa el segundo valor es igual al valor de pantalla convirtiendo el numero en un valor flotante y la asigna a la variable ultimovalor.  Por otor lado, el evento realizarOperacion utilizara los parametros primer valor, segundo valor y operacion  que estan definidos anteriomente.
 
 	Resultado: function(){
 
@@ -163,36 +170,42 @@ var calculadora = {
 		this.primerValor = this.resultado;
 		this.valorpantalla = "";
 
+
+ // la segunda condicion if else, define si el resultado numero es menor a 9 caracteres, el valor pantalla es igual al resultado pero en cadena. si no se cumple la condicion, entonces el valor pantalla es igual al resultado con 8 coracteres y despues le agrega ...
+
 		if (this.resultado.toString().length < 9){
 			this.valorpantalla = this.resultado.toString();
 		} else {
 			this.valorpantalla = this.resultado.toString().slice(0,8) + "...";
 		}
-
-		this.auxTeclaIgual = true;
 		this.updatepantalla();
 	},
+
+//esta funcion realizarOperacion tiene 3 parametros : primer valor segundo valor y operacion.  es de tipo switch que contiene las operaciones.  caso +, caso -,  caso *.  El resultado es igual al valor de pantalla capturado en el primer momento justo con la operacion y el segundo valor es el resultado de la operacion y para la operacion raiz, se utiliza la clase math calculando la raiz cuadrada del valor en pantalla.
 
 	realizarOperacion: function(primerValor, segundoValor, operacion){
 		switch(operacion){
 			case "+":
-				this.resultado = eval(primerValor + segundoValor);
+				this.resultado = (primerValor + segundoValor);
 			break;
 			case "-":
-				this.resultado = eval(primerValor - segundoValor);
+				this.resultado = (primerValor - segundoValor);
 			break;
 			case "*":
-				this.resultado = eval(primerValor * segundoValor);
+				this.resultado = (primerValor * segundoValor);
 			break;
 			case "/":
-				this.resultado = eval(primerValor / segundoValor);
+				this.resultado = (primerValor / segundoValor);
 			break;
 			case "raiz":
-				this.resultado = eval(Math.sqrt(primerValor));
+				this.resultado = (Math.sqrt(primerValor));
 		}
 	},
 
-	updatepantalla: function(){
+
+ //updatepantalla es el evento que utilizamos  para actualizar el display con el valorpantalla.
+
+ 	updatepantalla: function(){
 		this.pantalla.innerHTML = this.valorpantalla;
 	}
 
